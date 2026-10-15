@@ -18,7 +18,11 @@ for (const f of ['public/index.html', 'public/admin.html']) {
   const used = new Set([...html.matchAll(/API\(\s*['"]([A-Za-z]+)['"]/g)].map(m => m[1]));
   for (const a of used) assert.ok(allowed.has(a), `${f} memakai action "${a}" yang tidak ada di allowlist functions/api.js`);
 }
-for (const bad of ['wrangler.jsonc', 'src/index.js', 'netlify.toml']) {
-  assert.ok(!existsSync(bad), `${bad} tidak boleh ada di proyek Pages (membingungkan build)`);
+assert.ok(!existsSync('netlify.toml'), 'netlify.toml tidak dipakai di Cloudflare');
+if (existsSync('wrangler.jsonc')) {
+  const w = readFileSync('wrangler.jsonc', 'utf8');
+  assert.ok(/"name"\s*:\s*"[a-z0-9-]+"/.test(w), 'wrangler.jsonc harus punya "name"');
+  assert.ok(w.includes('"main": "src/index.js"') && existsSync('src/index.js'), 'wrangler.jsonc menunjuk src/index.js yang harus ada');
+  assert.ok(w.includes('"/api"'), 'run_worker_first harus memuat /api');
 }
 console.log('OK: paket Cloudflare Pages lolos pemeriksaan statis.');

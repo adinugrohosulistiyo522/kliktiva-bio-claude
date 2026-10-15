@@ -36,3 +36,14 @@ D. Baru pasang domain:
 
 PEMERIKSAAN LOKAL
   npm run check:all
+
+----------------------------------------------------------------
+JIKA PROYEK DIBUAT LEWAT ALUR "WORKERS" (alamat *.workers.dev)
+----------------------------------------------------------------
+Paket ini juga memuat wrangler.jsonc + src/index.js untuk Worker.
+- Ubah "name" di wrangler.jsonc agar SAMA PERSIS dengan nama Worker di dashboard
+  (default di paket ini: kliktiva-bio-claude).
+- Isi APPS_SCRIPT_URL di Settings > Variables and Secrets milik Worker itu, lalu deploy ulang.
+- Uji: buka https://NAMA.AKUN.workers.dev/api  -> harus tampil JSON {"ok":true,...}
+- Catatan: domain kustom (mis. subdomain.kliktiva.my.id) di Worker butuh zona DNS aktif di Cloudflare.
+  Dengan DNS di Netlify, pakai alur Pages. Jika memakai Pages, hapus wrangler.jsonc dan folder src/.
